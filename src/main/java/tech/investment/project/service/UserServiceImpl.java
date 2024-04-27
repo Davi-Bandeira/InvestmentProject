@@ -30,7 +30,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     @Transactional(readOnly = true)
-    public UserRetrieve findRetriveById(Long id) {
+    public UserRetrieve findRetrieveById(Long id) {
         var persistedUser = findById(id);
         return userMapper.fromEntity(persistedUser);
     }
@@ -58,7 +58,8 @@ public class UserServiceImpl implements UserService {
         return userMapper.fromEntity(persistedUser);
     }
 
-    protected User findById(Long id) {
+    @Override
+    public User findById(Long id) {
         return userRepository.findById(id)
                 .orElseThrow(() -> new NotFoundException("Usuário não encontrado"));
     }

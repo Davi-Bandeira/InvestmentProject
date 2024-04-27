@@ -32,7 +32,7 @@ public class UserApi {
 
     @GetMapping("/{id}")
     public ResponseEntity<UserRetrieve> getUserById(@PathVariable Long id) {
-        return ResponseEntity.ok(userService.findRetriveById(id));
+        return ResponseEntity.ok(userService.findRetrieveById(id));
     }
 
     @GetMapping
