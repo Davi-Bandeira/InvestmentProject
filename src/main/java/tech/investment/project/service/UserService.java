@@ -1,5 +1,6 @@
 package tech.investment.project.service;
 
+import tech.investment.project.dto.AccountRetrieve;
 import tech.investment.project.dto.UserDTO;
 import tech.investment.project.dto.UserRetrieve;
 import tech.investment.project.entity.User;
@@ -19,4 +20,6 @@ public interface UserService {
     void deleteById(Long id);
 
     UserRetrieve update(Long id, UserDTO userDTO);
+
+    List<AccountRetrieve> findByUser(Long id);
 }

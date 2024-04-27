@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import tech.investment.project.dto.AccountRetrieve;
 import tech.investment.project.dto.UserDTO;
 import tech.investment.project.dto.UserRetrieve;
 import tech.investment.project.service.UserService;
@@ -50,5 +51,10 @@ public class UserApi {
     public ResponseEntity<Void> deleteById(@PathVariable Long id) {
         userService.deleteById(id);
         return ResponseEntity.ok().build();
+    }
+
+    @GetMapping("/{id}/accounts")
+    public List<AccountRetrieve> findByUser(@PathVariable Long id) {
+        return userService.findByUser(id);
     }
 }
