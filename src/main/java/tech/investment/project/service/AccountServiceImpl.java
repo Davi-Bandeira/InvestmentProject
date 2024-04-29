@@ -1,8 +1,10 @@
 package tech.investment.project.service;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import tech.investment.project.client.BrapiClient;
 import tech.investment.project.dto.AccountDTO;
 import tech.investment.project.dto.AccountStockDTO;
 import tech.investment.project.dto.AccountStockRetrieve;
@@ -20,6 +22,10 @@ import java.util.List;
 @RequiredArgsConstructor
 public class AccountServiceImpl implements AccountService {
 
+    @Value("#{environment.TOKEN}")
+    private String TOKEN;
+
+    private final BrapiClient brapiClient;
     private final UserService userService;
     private final StockRepository stockRepository;
     private final AccountRepository accountRepository;
@@ -56,7 +62,15 @@ public class AccountServiceImpl implements AccountService {
                 .orElseThrow(() -> new NotFoundException("Conta não encontrado"));
 
         return account.getAccountStocks().stream().map(accountStock ->
-                new AccountStockRetrieve(accountStock.getStock().getId(),
-                accountStock.getQuantity(), 0)).toList();
+                        new AccountStockRetrieve(accountStock.getStock().getId(),
+                                accountStock.getQuantity(),
+                                getTotal(accountStock.getId().getStockId(), accountStock.getQuantity())))
+                .toList();
+    }
+
+    private double getTotal(String stockId, Integer quantity) {
+        var response = brapiClient.getQuote(TOKEN, stockId);
+        var price = response.results().getFirst().getRegularMarketPrice();
+        return quantity * price;
     }
 }

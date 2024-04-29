@@ -12,4 +12,6 @@ public class StockDTO {
     private String ticker;
 
     private String description;
+
+    private double regularMarketPrice;
 }
