@@ -10,6 +10,8 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import tech.investment.project.dto.AccountStockDTO;
+import java.math.BigDecimal;
 
 @Entity
 @Getter
@@ -33,4 +35,17 @@ public class AccountStock {
     private Stock stock;
 
     private Integer quantity;
+
+    private BigDecimal avgPrice;
+
+    private BigDecimal percentWallet;
+
+    private BigDecimal totalValue;
+
+    public AccountStock(AccountStockId id, Account account, Stock persistedStock, AccountStockDTO accountStockDTO) {
+        this.id = id;
+        this.account = account;
+        this.stock = persistedStock;
+        this.quantity = accountStockDTO.getQuantity();
+    }
 }
