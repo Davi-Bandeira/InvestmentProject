@@ -30,8 +30,6 @@ public class Stock {
 
     private String stockType;
 
-    private BigDecimal bazinPrice;
-
     @CreatedDate
     private LocalDateTime createdAt;
 

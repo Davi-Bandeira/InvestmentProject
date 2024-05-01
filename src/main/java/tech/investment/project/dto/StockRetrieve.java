@@ -4,6 +4,8 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.math.BigDecimal;
+
 @Getter
 @Setter
 @AllArgsConstructor
@@ -11,5 +13,9 @@ public class StockRetrieve {
 
     private String id;
 
-    private String description;
+    private String name;
+
+    private BigDecimal currentPrice;
+
+    private String stockType;
 }
