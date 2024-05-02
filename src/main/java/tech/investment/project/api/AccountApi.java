@@ -12,8 +12,6 @@ import org.springframework.web.bind.annotation.RestController;
 import tech.investment.project.dto.AccountDTO;
 import tech.investment.project.dto.AccountStockDTO;
 import tech.investment.project.dto.AccountStockRetrieve;
-import tech.investment.project.entity.AccountStock;
-import tech.investment.project.entity.Stock;
 import tech.investment.project.service.AccountService;
 
 import java.util.List;

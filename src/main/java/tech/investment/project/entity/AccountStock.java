@@ -40,12 +40,18 @@ public class AccountStock {
 
     private BigDecimal percentWallet;
 
+    private BigDecimal totalCost;
+
     private BigDecimal totalValue;
 
-    public AccountStock(AccountStockId id, Account account, Stock persistedStock, AccountStockDTO accountStockDTO) {
+    public AccountStock(AccountStockId id, Account account, Stock stock, AccountStockDTO accountStockDTO) {
         this.id = id;
+        this.stock = stock;
         this.account = account;
-        this.stock = persistedStock;
+        this.percentWallet = BigDecimal.valueOf(100);
         this.quantity = accountStockDTO.getQuantity();
+        this.avgPrice = accountStockDTO.getUnitPrice();
+        this.totalCost = BigDecimal.valueOf(this.quantity).multiply(this.avgPrice);
+        this.totalValue = BigDecimal.valueOf(this.quantity).multiply(stock.getCurrentPrice());
     }
 }

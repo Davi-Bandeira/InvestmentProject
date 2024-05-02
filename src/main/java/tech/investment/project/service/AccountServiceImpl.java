@@ -10,9 +10,9 @@ import tech.investment.project.entity.Account;
 import tech.investment.project.entity.AccountStock;
 import tech.investment.project.entity.AccountStockId;
 import tech.investment.project.exception.NotFoundException;
+import tech.investment.project.mapper.AccountStockMapper;
 import tech.investment.project.repository.AccountRepository;
 import tech.investment.project.repository.AccountStockRepository;
-import tech.investment.project.repository.StockRepository;
 
 import java.util.List;
 
@@ -21,8 +21,9 @@ import java.util.List;
 public class AccountServiceImpl implements AccountService {
 
     private final UserService userService;
-    private final StockRepository stockRepository;
+    private final StockService stockService;
     private final AccountRepository accountRepository;
+    private final AccountStockMapper accountStockMapper;
     private final AccountStockRepository accountStockRepository;
 
     @Override
@@ -40,13 +41,13 @@ public class AccountServiceImpl implements AccountService {
     @Override
     @Transactional
     public void addStock(Long accountId, AccountStockDTO accountStockDTO) {
-        var account = accountRepository.findById(accountId)
-                .orElseThrow(() -> new NotFoundException("Conta não encontrado"));
-        var persistedStock = stockRepository.findById(accountStockDTO.getStockId())
-                .orElseThrow(() -> new NotFoundException("Ação não encontrada"));
         var id = new AccountStockId(accountId, accountStockDTO.getStockId());
-        var accountStock = new AccountStock(id, account, persistedStock, accountStockDTO);
+        var accountStock = accountStockRepository.findById(id)
+                .orElse(null);
 
+        if (accountStock == null) {
+            accountStock = buildNewAccountStock(id, accountStockDTO);
+        }
         accountStockRepository.save(accountStock);
     }
 
@@ -55,10 +56,17 @@ public class AccountServiceImpl implements AccountService {
         var account = accountRepository.findById(accountId)
                 .orElseThrow(() -> new NotFoundException("Conta não encontrado"));
 
-        return account.getAccountStocks().stream().map(accountStock ->
-                        new AccountStockRetrieve(accountStock.getStock().getId(),
-                                accountStock.getQuantity(),
-                                accountStock.getTotalValue()))
-                .toList();
+        return account.getAccountStocks().stream().map(accountStockMapper::fromEntity).toList();
+    }
+
+    public Account findById(Long id) {
+        return accountRepository.findById(id)
+                .orElseThrow(() -> new NotFoundException("Conta não encontrado"));
+    }
+
+    private AccountStock buildNewAccountStock(AccountStockId id, AccountStockDTO accountStockDTO) {
+        var account = findById(id.getAccountId());
+        var stock = stockService.findById(id.getStockId());
+        return new AccountStock(id, account, stock, accountStockDTO);
     }
 }
