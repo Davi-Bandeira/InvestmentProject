@@ -72,7 +72,7 @@ public class UserServiceImpl implements UserService {
     public List<AccountRetrieve> findByUser(Long id) {
         var persistedUser = findById(id);
         return persistedUser.getAccounts().stream().map(account ->
-            new AccountRetrieve(account.getId(), account.getDescription())
+            new AccountRetrieve(account)
         ).toList();
     }
 

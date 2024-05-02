@@ -1,5 +1,6 @@
 package tech.investment.project.entity;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
@@ -15,6 +16,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 @Entity
@@ -36,6 +38,10 @@ public class Account {
     @JoinColumn(name = "user_id")
     private User user;
 
-    @OneToMany(mappedBy = "account")
+    @OneToMany(mappedBy = "account", cascade = CascadeType.ALL)
     private List<AccountStock> accountStocks;
+
+    private BigDecimal totalCost;
+
+    private BigDecimal totalValue;
 }

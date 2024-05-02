@@ -7,10 +7,14 @@ import tech.investment.project.dto.AccountDTO;
 import tech.investment.project.dto.AccountStockDTO;
 import tech.investment.project.dto.AccountStockRetrieve;
 import tech.investment.project.entity.Account;
+import tech.investment.project.entity.AccountStock;
 import tech.investment.project.exception.NotFoundException;
 import tech.investment.project.mapper.AccountStockMapper;
 import tech.investment.project.repository.AccountRepository;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 @Service
@@ -39,6 +43,8 @@ public class AccountServiceImpl implements AccountService {
     public void addStock(Long accountId, AccountStockDTO accountStockDTO) {
         var account = findById(accountId);
         accountStockService.addStock(account, accountStockDTO);
+        accountStockService.updateWalletBalancing(account);
+        accountRepository.save(account);
     }
 
     @Override
@@ -46,7 +52,14 @@ public class AccountServiceImpl implements AccountService {
         var account = accountRepository.findById(accountId)
                 .orElseThrow(() -> new NotFoundException("Conta não encontrado"));
 
-        return account.getAccountStocks().stream().map(accountStockMapper::fromEntity).toList();
+        if (account.getAccountStocks().isEmpty()) {
+            return new ArrayList<>();
+        }
+
+        List<AccountStock> stockList = account.getAccountStocks();
+        Collections.sort(stockList, Comparator.comparing(AccountStock::getTotalValue).reversed());
+
+        return stockList.stream().map(accountStockMapper::fromEntity).toList();
     }
 
     public Account findById(Long id) {

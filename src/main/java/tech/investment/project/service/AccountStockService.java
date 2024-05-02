@@ -6,4 +6,6 @@ import tech.investment.project.entity.Account;
 public interface AccountStockService {
 
     void addStock(Account account, AccountStockDTO accountStockDTO);
+
+    void updateWalletBalancing(Account account);
 }
