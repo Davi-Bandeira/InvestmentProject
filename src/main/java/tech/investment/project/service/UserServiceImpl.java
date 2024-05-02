@@ -10,7 +10,6 @@ import tech.investment.project.dto.UserRetrieve;
 import tech.investment.project.entity.User;
 import tech.investment.project.exception.NotFoundException;
 import tech.investment.project.mapper.UserMapper;
-import tech.investment.project.repository.AccountRepository;
 import tech.investment.project.repository.UserRepository;
 
 import java.util.List;
@@ -21,7 +20,6 @@ public class UserServiceImpl implements UserService {
 
     private final UserRepository userRepository;
     private final UserMapper userMapper;
-    private final AccountRepository accountRepository;
 
     @Override
     @Transactional
@@ -71,9 +69,7 @@ public class UserServiceImpl implements UserService {
     @Transactional(readOnly = true)
     public List<AccountRetrieve> findByUser(Long id) {
         var persistedUser = findById(id);
-        return persistedUser.getAccounts().stream().map(account ->
-            new AccountRetrieve(account)
-        ).toList();
+        return persistedUser.getAccounts().stream().map(AccountRetrieve::new).toList();
     }
 
     private void updateData(User persistedUser, User updatedUser) {
