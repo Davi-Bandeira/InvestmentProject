@@ -13,7 +13,6 @@ import tech.investment.project.mapper.AccountStockMapper;
 import tech.investment.project.repository.AccountRepository;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
@@ -57,7 +56,7 @@ public class AccountServiceImpl implements AccountService {
         }
 
         List<AccountStock> stockList = account.getAccountStocks();
-        Collections.sort(stockList, Comparator.comparing(AccountStock::getTotalValue).reversed());
+        stockList.sort(Comparator.comparing(AccountStock::getTotalValue).reversed());
 
         return stockList.stream().map(accountStockMapper::fromEntity).toList();
     }
